@@ -7,32 +7,25 @@ var Finder = function(){
 		returnMany: null
 	};
 
+	//sets wether we should return any array or a single object
+	function setReturnType(many){
+		context.returnMany = many;
+		return {'in': arraySetter};
+	}
+
+	Object.defineProperty(this, 'one', {get: setReturnType.bind(null, false)});
+	Object.defineProperty(this, 'all', {get: setReturnType.bind(null, true)});
+
 	function createPredicate(prop, value){
 		var predicate = new Object();
 		predicate[prop] = value;
 		return predicate;
 	}
 
-	//Recursively determines if the predicate exists in the given object
-	function deepCompare(elem, predicate){
-		var key = Object.keys(predicate)[0],
-			value = predicate[key];
-
-		if(!key) throw "Invalid predicate: " + JSON.stringify(predicate);
-
-		if(elem[key] === value) return true;
-		if(JSON.stringify(elem[key]) === JSON.stringify(value)) return true;
-
-		if(typeof(value) === 'object'  && value !== null) {
-			var contains = true;
-			for(var valueKey in value){
-				//if any of the comparisons return false, "contains" will be false
-				contains &= deepCompare(elem[key], createPredicate(valueKey, value[valueKey]));
-			}
-			//convert to boolean
-			return !!contains;	
-		}
-		return false;
+	//registers the array in the finder
+	function arraySetter(array) {
+		context.array = array;
+		return {by: findBy.bind(context), with: findWith.bind(context)};
 	}
 
 	//filters the array by the predicate
@@ -74,20 +67,27 @@ var Finder = function(){
 		return (this.returnMany) ? result : result[0];
 	}
 
-	//registers the array in the finder
-	function arraySetter(array) {
-		context.array = array;
-		return {by: findBy.bind(context), with: findWith.bind(context)};
-	}
+	//Recursively determines if the predicate exists in the given object
+	function deepCompare(elem, predicate){
+		var key = Object.keys(predicate)[0],
+			value = predicate[key];
 
-	//sets wether we should return any array or a single object
-	function setReturnType(many){
-		context.returnMany = many;
-		return {'in': arraySetter};
-	}
+		if(!key) throw "Invalid predicate: " + JSON.stringify(predicate);
 
-	Object.defineProperty(this, 'one', {get: setReturnType.bind(null, false)});
-	Object.defineProperty(this, 'all', {get: setReturnType.bind(null, true)});
+		if(elem[key] === value) return true;
+		if(JSON.stringify(elem[key]) === JSON.stringify(value)) return true;
+
+		if(typeof(value) === 'object'  && value !== null) {
+			var contains = true;
+			for(var valueKey in value){
+				//if any of the comparisons return false, "contains" will be false
+				contains &= deepCompare(elem[key], createPredicate(valueKey, value[valueKey]));
+			}
+			//convert to boolean
+			return !!contains;	
+		}
+		return false;
+	}
 
 	return this;
 }
