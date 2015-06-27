@@ -47,3 +47,9 @@ find.one.in(buildings).by({roof: {color: 'red'}, stories: 3});
 //Returns [{id: 59, ...}, {id: 62, ...}]
 find.all.in(buildings).with({floor: 1}, {exitSigns: []});
 ```
+
+`find...by`
+accepts a predicate to compare against objects in the array
+
+`find...with`
+accepts a predicate and a the target path of an array within the object to search in
