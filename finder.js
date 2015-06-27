@@ -80,19 +80,14 @@ var Finder = function(){
 		return {by: findBy.bind(context), with: findWith.bind(context)};
 	}
 
-	Object.defineProperty(this, 'one', {
-		get: function() {
-			context.returnMany = false;
-			return {'in': arraySetter};
-		}
-	})
+	//sets wether we should return any array or a single object
+	function setReturnType(many){
+		context.returnMany = many;
+		return {'in': arraySetter};
+	}
 
-	Object.defineProperty(this, 'all', {
-		get: function() {
-			context.returnMany = true;
-			return {'in': arraySetter};
-		}
-	});
+	Object.defineProperty(this, 'one', {get: setReturnType.bind(null, false)});
+	Object.defineProperty(this, 'all', {get: setReturnType.bind(null, true)});
 
 	return this;
 }
