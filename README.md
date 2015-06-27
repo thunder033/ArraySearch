@@ -40,7 +40,7 @@ var find = Finder(),
 
 //Returns {name: 'Larry', age: 22}
 find.one.in(people).by({name: 'Larry'});
-//Returns [{name: 'Larry', age: 22}]
+//Returns [{name: 'Bob', age: 18}]
 find.all.in(people).by({age: 18});
 //Returns {id: 62, ...}
 find.one.in(buildings).by({roof: {color: 'red'}, stories: 3});
