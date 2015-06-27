@@ -3,7 +3,7 @@ Utility that allows for robust searching of object arrays
 
 Usage examples:
 
-```
+```javascript
 var find = Finder(),
 	people = [
 		{name: 'Joe', age: 21},
