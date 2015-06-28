@@ -1,4 +1,4 @@
-var Finder = function(){
+Finder = function(){
 	this.one = null;
 	this.all = null;
 
@@ -25,7 +25,7 @@ var Finder = function(){
 	//registers the array in the finder
 	function arraySetter(array) {
 		context.array = array;
-		return {by: findBy.bind(context), with: findWith.bind(context)};
+		return {with: findBy.bind(context), having: setSearchPath};
 	}
 
 	//filters the array by the predicate
@@ -43,9 +43,14 @@ var Finder = function(){
 		return (this.returnMany) ? result : result[0];
 	}
 
+	//curries the search path for findWith
+	function setSearchPath(searchPath) {
+		return {with: findWith.bind(context, searchPath)};
+	}
+
 	//filters the array based on  a given array property contains elements that match the predicate
 	//example search path: {leve1 : {level2: {level3: []}}}
-	function findWith(predicate, searchPath) {
+	function findWith(searchPath, predicate) {
 		var key, keys = [], targetPath = searchPath;
 		do {
 			key = Object.keys(targetPath)[0];
@@ -90,4 +95,4 @@ var Finder = function(){
 	}
 
 	return this;
-}
+};
