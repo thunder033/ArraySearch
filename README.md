@@ -1,6 +1,9 @@
 # ArraySearch
 Utility that allows for robust searching of object arrays
 
+See my blog post http://blog.thunderlab.net/arraysearch-and-natural-language-functions
+for an explanation of how it works and some of the reasoning in my development.
+
 Usage examples:
 
 ```javascript
