@@ -39,17 +39,17 @@ var find = Finder(),
 	]
 
 //Returns {name: 'Larry', age: 22}
-find.one.in(people).by({name: 'Larry'});
+find.one.in(people).with({name: 'Larry'});
 //Returns [{name: 'Bob', age: 18}]
-find.all.in(people).by({age: 18});
+find.all.in(people).with({age: 18});
 //Returns {id: 62, ...}
-find.one.in(buildings).by({roof: {color: 'red'}, stories: 3});
+find.one.in(buildings).with({roof: {color: 'red'}, stories: 3});
 //Returns [{id: 59, ...}, {id: 62, ...}]
-find.all.in(buildings).with({floor: 1}, {exitSigns: []});
+find.all.in(buildings).having({exitSigns: []}).with({floor: 1});
 ```
 
-`find...by`
+`find...with`
 accepts a predicate to compare against objects in the array
 
-`find...with`
+`find...having...with`
 accepts a predicate and a the target path of an array within the object to search in
