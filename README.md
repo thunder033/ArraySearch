@@ -34,38 +34,39 @@ Parameters:
 
 ```javascript
 var find = Finder(),
-	people = [
-		{name: 'Joe', age: 21},
-		{name: 'Larry', age: 22},
-		{name: 'Bob', age: 18}
-	],
-	buildings = [
-		{
-			id: 59,
-			stories: 2,
-			roof: {
-				color: 'black',
-				material: 'clay'
-			},
-			exitSigns : [
-				{id: 0, floor: 1},
-				{id: 1, floor: 1}
-			]
+people = [
+	{name: 'Joe', age: 21, hair: 'brown'},
+	{name: 'Larry', age: 22},
+	{name: 'Bob', age: 18, gender: 'M'}
+],
+buildings = [
+	{
+		id: 59,
+		stories: 2,
+		roof: {
+			color: 'black',
+			material: 'clay'
 		},
-		{
-			id: 62,
-			stories: 3,
-			roof: {
-				color: 'red',
-				material: 'clay'
-			},
-			exitSigns : [
-				{id: 0, floor: 1},
-				{id: 1, floor: 1},
-				{id: 2, floor: 2}
-			]
-		}
-	]
+		exitSigns : [
+			{id: 0, floor: 1},
+			{id: 1, floor: 1}
+		]
+	},
+	{
+		id: 62,
+		stories: 3,
+		address: '123 Main St',
+		roof: {
+			color: 'red',
+			material: 'clay'
+		},
+		exitSigns : [
+			{id: 0, floor: 1, color: 'red'},
+			{id: 1, floor: 1},
+			{id: 2, floor: 2}
+		]
+	}
+]
 
 //basic properties search
 //Returns {name: 'Larry', age: 22}
