@@ -67,14 +67,34 @@ var find = Finder(),
 		}
 	]
 
+//basic properties search
 //Returns {name: 'Larry', age: 22}
-find.one.in(people).with({name: 'Larry'});
-//Returns [{name: 'Bob', age: 18}]
-find.all.in(people).with({age: 18});
+find.one.in(people).with({name: 'Larry'})
+//Returns [{name: 'Bob', age: 18, gender: 'M'}]
+find.all.in(people).with({age: 18})
+
+//nested properties search
 //Returns {id: 62, ...}
-find.one.in(buildings).with({roof: {color: 'red'}, stories: 3});
+find.one.in(buildings).with({roof: {color: 'red'}, stories: 3})
+
+//nested array search
 //Returns [{id: 59, ...}, {id: 62, ...}]
-find.all.in(buildings).having({exitSigns: []}).with({floor: 1});
+find.all.in(buildings).having('exitSigns').with({floor: 1})
+find.all.in(buildings).having(['exitSigns']).with({floor: 1})
+find.all.in(buildings).having({exitSigns: []}).with({floor: 1})
+
+//keys search
+//returns [{name: 'Bob', age: 18, gender: 'M'}]
+find.all.in(people).with.keys('gender')
+find.all.in(people).with.keys(['age','gender'])
+//returns [{name: 'Joe',...},{name: 'Bob',...}]
+find.all.in(people).with.any.keys(['hair','gender'])
+
+//nested keys search
+//returns [{id: 62, ...}]
+find.all.in(buildings).having('exitSigns').with.keys('color')
+//returns {id: 59, ...}
+find.one.in(buildings).having('exitSigns').with.any.keys(['color','floor'])
 ```
 
 # Future features
