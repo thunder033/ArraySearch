@@ -1,6 +1,6 @@
 {
   "name": "arraysearch",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "search arrays for objects with desired properties",
   "main": "finder.js",
   "directories": {
