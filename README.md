@@ -6,6 +6,8 @@ for an explanation of how it works and some of the reasoning in my development.
 
 # Usage
 
+[![NPM](https://nodei.co/npm/arraysearch.png)](https://npmjs.org/package/arraysearch)
+
 In node.js, require ArraySearch:
 
 `var find = require('arraysearch').Finder`
