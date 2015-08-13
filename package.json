@@ -1,6 +1,6 @@
 {
   "name": "arraysearch",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "search arrays for objects with desired properties",
   "main": "finder.js",
   "directories": {
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/thunder033/ArraySearch#readme",
   "devDependencies": {
     "chai": "^3.2.0",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5"
   }
 }

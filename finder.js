@@ -1,7 +1,18 @@
-Finder = function(){
+'use strict';
+/**
+ * Created by Greg Rozmarynowycz 6/15/2015
+ */
+
+/**
+ * Finds objects in a array with given properties
+ * @returns {Finder}
+ * @constructor
+ */
+var Finder = function(){
+	/* jshint validthis:true */
 	//Determine necessary features exist
 	if(!Array.prototype.some || !Array.prototype.every || !Array.prototype.forEach) {
-		throw 'Array prototype does not contain necessary "some","every", and "forEach" functions';
+		throw new Error('Array prototype does not contain necessary "some","every", and "forEach" functions');
 	}
 	
 	this.one = null;
@@ -29,7 +40,9 @@ Finder = function(){
 	//find.[all|one].in(array).with(predicate)
 	//registers the array in the finder
 	function arraySetter(array) {
-		if(!(array || array.constructor === Array)) throw JSON.stringify(array) + ' is not an array';
+		if(!(array || array.constructor === Array)) {
+			throw new TypeError('Search context is not an array');
+		}
 		context.array = array;
 		return  {with: attachKeysSearch(findWith.bind(context)), having: setSearchPath};
 	}
@@ -69,7 +82,7 @@ Finder = function(){
 	
 	//creates a predicate from property and value
 	function createPredicate(prop, value){
-		var predicate = new Object();
+		var predicate = {};
 		predicate[prop] = value;
 		return predicate;
 	}
@@ -79,11 +92,13 @@ Finder = function(){
 		var result = [],
 			pool = this.array;
 		for(var prop in predicate){
-			pool.forEach(function search(elem){
-				if(deepCompare(elem, new createPredicate(prop, predicate[prop]))){
-					result.push(elem);
-				}
-			});
+			if(predicate.hasOwnProperty(prop)){
+				pool.forEach(function search(elem){
+					if(deepCompare(elem, createPredicate(prop, predicate[prop]))){
+						result.push(elem);
+					}
+				});
+			}
 			pool = result;
 		}	
 		return (this.returnMany) ? result : result[0];
@@ -93,7 +108,9 @@ Finder = function(){
 	//searches an object for the given keys, returning true or false
 	function findWithKeys(hasAny, keys){
 		if(typeof(keys) === 'string') keys = [keys];
-		if(!(keys && keys.constructor === Array)) throw JSON.stringify(keys) + ' is not array';
+		if(!(keys && keys.constructor === Array)) {
+			throw new TypeError(JSON.stringify(keys) + ' is not array');
+		}
 		var result = [];
 		this.array.forEach(function(elem){
 			var searchFunc = (hasAny === true) ? 'some' : 'every';
@@ -146,8 +163,8 @@ Finder = function(){
 		var key = Object.keys(predicate)[0],
 			value = predicate[key];
 
-		if(!key) throw "Invalid predicate: " + JSON.stringify(predicate);
-
+		if(!key) { throw new Error("Invalid predicate: " + JSON.stringify(predicate)); }
+		if(Boolean(elem) !== Boolean(predicate)) {return false; } //prevents property checking on null values
 		if(elem[key] === value) return true;
 		if(JSON.stringify(elem[key]) === JSON.stringify(value)) return true;
 
@@ -179,3 +196,5 @@ Function.prototype.arg = function() {
 	partial.prototype = Object.create(this.prototype);
 	return partial;
 };
+
+module.exports = {Finder: new Finder()};
