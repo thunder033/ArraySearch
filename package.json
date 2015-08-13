@@ -1,0 +1,32 @@
+{
+  "name": "arraysearch",
+  "version": "0.1.0",
+  "description": "search arrays for objects with desired properties",
+  "main": "finder.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thunder033/ArraySearch.git"
+  },
+  "keywords": [
+    "array",
+    "search",
+    "objects",
+    "deep"
+  ],
+  "author": "Greg Rozmarynowycz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thunder033/ArraySearch/issues"
+  },
+  "homepage": "https://github.com/thunder033/ArraySearch#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  }
+}
