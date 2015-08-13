@@ -6,7 +6,12 @@ for an explanation of how it works and some of the reasoning in my development.
 
 # Usage
 
-Initialize the ArrayFinder:
+In node.js, require ArraySearch:
+
+`var find = require('arraysearch').Finder`
+
+This module can be used outside of node, simply common out the "module.exports" at the end of the file and initialize the finder:
+
 `var find = Finder();`
 
 Calling the array finder
