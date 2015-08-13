@@ -40,7 +40,7 @@ var Finder = function(){
 	//find.[all|one].in(array).with(predicate)
 	//registers the array in the finder
 	function arraySetter(array) {
-		if(!(array || array.constructor === Array)) {
+		if(!(array && array.constructor === Array)) {
 			throw new TypeError('Search context is not an array');
 		}
 		context.array = array;
@@ -139,7 +139,7 @@ var Finder = function(){
 			while(targetPath[key]);
 			return keys;
 		}
-		throw JSON.stringify(value) + ' is not a valid search path';
+		throw new Error(JSON.stringify(value) + ' is not a valid search path');
 	}
 	
 	//filters the array based on  a given array property contains elements that match the predicate
