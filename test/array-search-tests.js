@@ -107,10 +107,27 @@ describe('Array Finder', function(){
         expect(result).to.deep.equal(expectedResult);
     });
 
-    it('throws an error if search context is not an array', function(){
+    it('throws an error if search context is not an object', function(){
         var badSearch = function(){
-            return find.one.in({}).with({prop: 1});
+            return find.one.in('test').with({prop: 1});
             };
         expect(badSearch).to.throw(TypeError);
     });
+
+    it('searches provided map and returns a single object', function(){
+        var expectedResult = _people.Joe,
+            result = find.one.in(_people).with({name: 'Joe'});
+        expect(result).to.deep.equal(expectedResult);
+    });
+
+    it('searches for multiple results provided map and returns a map of results', function(){
+        var expectedResult = {'Bob': _people.Bob, 'Lisa': _people.Lisa},
+            result = find.all.in(_people).with({age: 18});
+        expect(result).to.deep.equal(expectedResult);
+    });
+
+    it('doesn\'t leave key traces on returned objects', function(){
+        var result = find.one.in(_people).with({name: 'Joe'});
+        expect(result).to.not.have.keys('__arraySearchObjKey');
+    })
 });

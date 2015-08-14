@@ -33,9 +33,11 @@ Return Type:
 If no objects meeting the predicate are found, either `undefined` or an empty array will be returned, depending on the return type.
 
 Parameters:
- - `array`: an array of objects (with a similiar structure)
+ - `array`: an array or map of objects (with a similiar structure)
  - `predicate`: properties to search for within each object, should be an object (see examples below)
  - `searchPath`: an object indicating the location of any array within each object (see examples below)
+
+With v1.1, a map of object can be provided. Searching for a single result will return a single object, while searching for all will return a map of results. This will temporarily modify each object in the map to preserve its key.
 
 # Examples:
 

@@ -21,7 +21,8 @@ var Finder = function(){
 	//create basic search context
 	var context = {
 		array: [],
-		returnMany: null
+		returnMany: null,
+		map: false
 	};
 	
 	/* Construct the finder function */
@@ -37,11 +38,29 @@ var Finder = function(){
 	Object.defineProperty(this, 'one', {get: setReturnType.arg(false)});
 	Object.defineProperty(this, 'all', {get: setReturnType.arg(true)});
 
+	function convertToArray(map){
+		return Object.keys(map).map(function(key){
+			var obj =  map[key];
+			Object.defineProperty(obj, '__arrSearchObjKey', {
+				value: key,
+				configurable: true
+			});
+			return obj;
+		})
+	}
+
 	//find.[all|one].in(array).with(predicate)
 	//registers the array in the finder
 	function arraySetter(array) {
 		if(!(array && array.constructor === Array)) {
-			throw new TypeError('Search context is not an array');
+
+			if(array && typeof(array) === 'object'){
+				context.map = true;
+				array = convertToArray(array);
+			}
+			else {
+				throw new TypeError('Search context is not an array or object map');
+			}
 		}
 		context.array = array;
 		return  {with: attachKeysSearch(findWith.bind(context)), having: setSearchPath};
@@ -87,6 +106,31 @@ var Finder = function(){
 		return predicate;
 	}
 
+	function buildResult(results){
+
+		if(this.map){
+			var resultOjb = {};
+
+			if(!this.returnMany){
+				var result = results.shift();
+				delete result.__arrSearchObjKey;
+				return result;
+			}
+
+			results.map(function(result){
+				var key = result.__arrSearchObjKey;
+				delete result.__arrSearchObjKey;
+				resultOjb[key] = result;
+			});
+
+			return resultOjb;
+		}
+		else {
+			return (this.returnMany) ? results : results[0];
+		}
+
+	}
+
 	//filters the array by the predicate
 	function findWith(predicate) {
 		var result = [],
@@ -101,7 +145,7 @@ var Finder = function(){
 			}
 			pool = result;
 		}	
-		return (this.returnMany) ? result : result[0];
+		return buildResult.call(this, result);
 	}
 	
 	//find.[all|one].in(array).with.keys(keys)
@@ -118,7 +162,7 @@ var Finder = function(){
 				result.push(elem);
 			}
 		});
-		return (this.returnMany) ? result : result[0];
+		return buildResult.call(this, result);
 	}
 	
 	
@@ -155,7 +199,7 @@ var Finder = function(){
 				result.push(elem);
 			}
 		});
-		return (this.returnMany) ? result : result[0];
+		return buildResult.call(this, result);
 	}
 
 	//Recursively determines if the predicate exists in the given object
