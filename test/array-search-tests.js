@@ -12,7 +12,8 @@ describe('Array Finder', function(){
             {name: 'Joe', age: 21, hair: 'brown'},
             {name: 'Larry', age: 22},
             {name: 'Bob', age: 18, gender: 'M'},
-            {name: 'Lisa', age: 18}
+            {name: 'Lisa', age: 18},
+            {name: 'Emily', age: 21, hair: 'blond'}
         ],
         buildings = [
             {
@@ -48,7 +49,8 @@ describe('Array Finder', function(){
             Joe: people[0],
             Larry: people[1],
             Bob: people[2],
-            Lisa: people[3]
+            Lisa: people[3],
+            Emily: people[4]
         },
         _buildings = {
             '59': buildings[0],
@@ -58,7 +60,14 @@ describe('Array Finder', function(){
 
     it('finds one object in an array', function(){
         var predicate = {name: 'Larry'},
-            expectedResult = _people.Larry;
+            expectedResult = _people.Larry,
+            result = find.one.in(people).with(predicate);
+        expect(result).to.deep.equal(expectedResult);
+    });
+
+    it('finds objects by multiple properties', function(){
+        var predicate = {age: 21, hair: 'blond'},
+            expectedResult = _people.Emily,
             result = find.one.in(people).with(predicate);
         expect(result).to.deep.equal(expectedResult);
     });
@@ -96,7 +105,7 @@ describe('Array Finder', function(){
     });
 
     it('searches by any contained keys', function(){
-        var expectedResult = [_people.Joe, _people.Bob],
+        var expectedResult = [_people.Joe, _people.Bob, _people.Emily],
             result = find.all.in(people).with.any.keys(['gender', 'hair']);
         expect(result).to.deep.equal(expectedResult);
     });

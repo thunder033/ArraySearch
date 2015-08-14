@@ -46,7 +46,7 @@ var Finder = function(){
 				configurable: true
 			});
 			return obj;
-		})
+		});
 	}
 
 	//find.[all|one].in(array).with(predicate)
@@ -136,6 +136,7 @@ var Finder = function(){
 		var result = [],
 			pool = this.array;
 		for(var prop in predicate){
+			result = [];
 			if(predicate.hasOwnProperty(prop)){
 				pool.forEach(function search(elem){
 					if(deepCompare(elem, createPredicate(prop, predicate[prop]))){
@@ -143,7 +144,7 @@ var Finder = function(){
 					}
 				});
 			}
-			pool = result;
+			pool = result.slice();
 		}	
 		return buildResult.call(this, result);
 	}
@@ -158,7 +159,7 @@ var Finder = function(){
 		var result = [];
 		this.array.forEach(function(elem){
 			var searchFunc = (hasAny === true) ? 'some' : 'every';
-			if(keys[searchFunc](elem.hasOwnProperty.bind(elem))){
+			if(keys[searchFunc](elem.hasOwnProperty, elem)){
 				result.push(elem);
 			}
 		});
