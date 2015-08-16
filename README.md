@@ -1,10 +1,11 @@
 # ArraySearch
+------------
 JavaScript utility that allows for robust deep searching of arrays of complex objects. Includes the ability to search by any number of properties within an object, or to find objects based on elements contained in within an array of that object.
 
 See my blog post http://blog.thunderlab.net/arraysearch-and-natural-language-functions
 for an explanation of how it works and some of the reasoning in my development.
 
-# Usage
+# Installation
 
 [![NPM](https://nodei.co/npm/arraysearch.png)](https://npmjs.org/package/arraysearch)
 
@@ -16,7 +17,9 @@ This module can be used outside of Node, simply comment out the "module.exports"
 
 `var find = new Finder();`
 
-Calling the array finder
+# Usage
+
+Calling the finder:
 
 `result = find.[one|all].in(collection).with(filter)`
 
@@ -24,22 +27,22 @@ accepts a filter to compare against objects in the collection (either a array or
 
 `result = find.[one|all].in(collection).having(searchPath).with(filter)`
 
-accepts a filter and a the target path of a collection within the object to search in
+accepts a filter and a the target path of a array within the object to search in
 
 Return Type:
  - `one`: returns the first object found meeting the search filter
- - `all`: returns an array or map (depends on original collection) of all objectrs found meeting the search filter
+ - `all`: returns an array or map (depends on original collection) of all objects found meeting the search filter
  
 If no objects meeting the filter are found, either `undefined` or an empty collection will be returned, depending on the return type.
 
 Parameters:
- - `array`: an array or map of objects (with a similiar structure)
+ - `collection`: an array or map of objects (with a similiar structure)
  - `filter`: properties to search for within each object, should be an object (see examples below)
  - `searchPath`: an object indicating the location of any array within each object (see examples below)
 
 With v1.1, a map of objects can be provided. Searching for a single result will return a single object, while searching for all will return a map of results. This will temporarily modify each object in the map to preserve its key.
 
-# Examples:
+# Examples
 
 ```javascript
 var find = Finder(),
