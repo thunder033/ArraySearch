@@ -12,32 +12,32 @@ In node.js, require ArraySearch:
 
 `var find = require('arraysearch').Finder`
 
-This module can be used outside of node, simply common out the "module.exports" at the end of the file and initialize the finder:
+This module can be used outside of Node, simply comment out the "module.exports" at the end of the file and initialize the finder:
 
-`var find = Finder();`
+`var find = new Finder();`
 
 Calling the array finder
 
-`result = find.[one|all].in(array).with(predicate)`
+`result = find.[one|all].in(collection).with(filter)`
 
-accepts a predicate to compare against objects in the array
+accepts a filter to compare against objects in the collection (either a array or a map)
 
-`result = find.[one|all].in(array).having(searchPath).with(predicate)`
+`result = find.[one|all].in(collection).having(searchPath).with(filter)`
 
-accepts a predicate and a the target path of an array within the object to search in
+accepts a filter and a the target path of a collection within the object to search in
 
 Return Type:
- - `one`: returns the first object found meeting the search predicate
- - `all`: returns an array of all objectrs found meeting the search predicate
+ - `one`: returns the first object found meeting the search filter
+ - `all`: returns an array or map (depends on original collection) of all objectrs found meeting the search filter
  
-If no objects meeting the predicate are found, either `undefined` or an empty array will be returned, depending on the return type.
+If no objects meeting the filter are found, either `undefined` or an empty collection will be returned, depending on the return type.
 
 Parameters:
  - `array`: an array or map of objects (with a similiar structure)
  - `predicate`: properties to search for within each object, should be an object (see examples below)
  - `searchPath`: an object indicating the location of any array within each object (see examples below)
 
-With v1.1, a map of object can be provided. Searching for a single result will return a single object, while searching for all will return a map of results. This will temporarily modify each object in the map to preserve its key.
+With v1.1, a map of objects can be provided. Searching for a single result will return a single object, while searching for all will return a map of results. This will temporarily modify each object in the map to preserve its key.
 
 # Examples:
 
