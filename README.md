@@ -34,7 +34,7 @@ If no objects meeting the filter are found, either `undefined` or an empty colle
 
 Parameters:
  - `array`: an array or map of objects (with a similiar structure)
- - `predicate`: properties to search for within each object, should be an object (see examples below)
+ - `filter`: properties to search for within each object, should be an object (see examples below)
  - `searchPath`: an object indicating the location of any array within each object (see examples below)
 
 With v1.1, a map of objects can be provided. Searching for a single result will return a single object, while searching for all will return a map of results. This will temporarily modify each object in the map to preserve its key.
