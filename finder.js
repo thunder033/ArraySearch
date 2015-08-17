@@ -242,4 +242,6 @@ Function.prototype.arg = function() {
 	return partial;
 };
 
-module.exports = {Finder: new Finder()};
+if(typeof(module) !== 'undefined'){
+	module.exports = {Finder: new Finder()};
+}

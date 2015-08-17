@@ -13,7 +13,7 @@ In node.js, require ArraySearch:
 
 `var find = require('arraysearch').Finder`
 
-This module can be used outside of Node, simply comment out the "module.exports" at the end of the file and initialize the finder:
+This module can be used outside of Node, simply include the script and initialize the finder:
 
 `var find = new Finder();`
 
