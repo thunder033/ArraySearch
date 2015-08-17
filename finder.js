@@ -30,13 +30,15 @@ var Finder = function(){
 	//find.[all|one].in(array)
 	//sets wether we should return any array or a single object
 	function setReturnType(many){
-		context.returnMany = many;
-		return {'in': arraySetter};
+		return function(){
+			context.returnMany = many;
+			return {'in': arraySetter};
+		}
 	}
 	
 	//find.[all|one]
-	Object.defineProperty(this, 'one', {get: setReturnType.arg(false)});
-	Object.defineProperty(this, 'all', {get: setReturnType.arg(true)});
+	Object.defineProperty(this, 'one', {get: setReturnType(false)});
+	Object.defineProperty(this, 'all', {get: setReturnType(true)});
 
 	function convertToArray(map){
 		return Object.keys(map).map(function(key){
@@ -84,14 +86,20 @@ var Finder = function(){
 		searchPath = resolveToSearchPath(searchPath);
 		return {with: attachHavingKeysSearch(findHaving.bind(context, searchPath, findWith), searchPath)};
 	}
-	
+
+	function findWithAnyKeys(hasAny){
+		return function(keys){
+			return findWithKeys.call(this, hasAny, keys);
+		}
+	}
+
 	//find.[all|one].in(array).having(searchPath).with.keys(keys)
 	//find.[all|one].in(array).having(searchPath).with.any.keys(keys)
 	function attachHavingKeysSearch(func, searchPath){
-		func.keys = findHaving.bind(context, searchPath, findWithKeys.arg(false));
+		func.keys = findHaving.bind(context, searchPath, findWithAnyKeys(false));
 		Object.defineProperty(func, 'any', {
 			get: function(){
-				return {keys: findHaving.bind(context, searchPath, findWithKeys.arg(true))};
+				return {keys: findHaving.bind(context, searchPath, findWithAnyKeys(true))};
 			}
 		});
 		return func;
@@ -148,7 +156,7 @@ var Finder = function(){
 		}	
 		return buildResult.call(this, result);
 	}
-	
+
 	//find.[all|one].in(array).with.keys(keys)
 	//searches an object for the given keys, returning true or false
 	function findWithKeys(hasAny, keys){
@@ -208,7 +216,7 @@ var Finder = function(){
 		var key = Object.keys(predicate)[0],
 			value = predicate[key];
 
-		if(!key) { throw new Error("Invalid predicate: " + JSON.stringify(predicate)); }
+		if(!key) { throw new Error("Invalid filter: " + JSON.stringify(predicate)); }
 		if(Boolean(elem) !== Boolean(predicate)) {return false; } //prevents property checking on null values
 		if(elem[key] === value) return true;
 		if(JSON.stringify(elem[key]) === JSON.stringify(value)) return true;
@@ -226,20 +234,6 @@ var Finder = function(){
 	}
 
 	return this;
-};
-
-//http://stackoverflow.com/questions/13851088/how-to-bind-function-arguments-without-binding-this
-Function.prototype.arg = function() {
-	if (typeof this !== "function")
-		throw new TypeError("Function.prototype.arg needs to be called on a function");
-	var slice = Array.prototype.slice,
-		args = slice.call(arguments), 
-		fn = this, 
-		partial = function() {
-			return fn.apply(this, args.concat(slice.call(arguments)));
-		};
-	partial.prototype = Object.create(this.prototype);
-	return partial;
 };
 
 if(typeof(module) !== 'undefined'){
