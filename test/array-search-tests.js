@@ -1,5 +1,6 @@
 /**
  * Created by Greg on 8/12/2015.
+ * @description Unit tests for ArraySearch
  */
 
 var find = require('../finder.js').Finder,

@@ -1,6 +1,7 @@
 'use strict';
 /**
  * Created by Greg Rozmarynowycz 6/15/2015
+ * @description ArraySearch lib
  */
 
 /**
@@ -8,15 +9,24 @@
  * @returns {Finder}
  * @constructor
  */
-var Finder = function(){
+var Finder = function Finder(){
 	/* jshint validthis:true */
 	//Determine necessary features exist
 	if(!Array.prototype.some || !Array.prototype.every || !Array.prototype.forEach) {
 		throw new Error('Array prototype does not contain necessary "some","every", and "forEach" functions');
 	}
-	
-	this.one = null;
-	this.all = null;
+
+	/**
+	 * Return one result
+	 * @type {{in: arraySetter}}
+	 */
+	this.one;
+	/**
+	 * Return all results
+	 * @type {object}
+	 * @returns {{in: arraySetter}}
+	 */
+	this.all;
 
 	//create basic search context
 	var context = {
@@ -28,7 +38,7 @@ var Finder = function(){
 	/* Construct the finder function */
 
 	//find.[all|one].in(array)
-	//sets wether we should return any array or a single object
+	//sets whether we should return any array or a single object
 	function setReturnType(many){
 		return function(){
 			context.returnMany = many;
@@ -52,19 +62,24 @@ var Finder = function(){
 	}
 
 	//find.[all|one].in(array).with(predicate)
-	//registers the array in the finder
-	function arraySetter(array) {
-		if(!(array && array.constructor === Array)) {
+	/**
+	 * registers the array in the finder
+	 * @name arraySetter
+	 * @param {object} collection
+	 * @returns {{with: findWith, having: setSearchPath}}
+	 */
+	function arraySetter(collection) {
+		if(!(collection && collection.constructor === Array)) {
 
-			if(array && typeof(array) === 'object'){
+			if(collection && typeof(collection) === 'object'){
 				context.map = true;
-				array = convertToArray(array);
+				collection = convertToArray(collection);
 			}
 			else {
 				throw new TypeError('Search context is not an array or object map');
 			}
 		}
-		context.array = array;
+		context.array = collection;
 		return  {with: attachKeysSearch(findWith.bind(context)), having: setSearchPath};
 	}
 	
@@ -82,6 +97,12 @@ var Finder = function(){
 	
 	//find.[all|one].in(array).having(searchPath).with(predicate)
 	//curries the search path for findHaving
+	/**
+	 * sets search path for nested search
+	 * @name setSearchPath
+	 * @param searchPath
+	 * @returns {{with: findHaving}}
+	 */
 	function setSearchPath(searchPath) {
 		searchPath = resolveToSearchPath(searchPath);
 		return {with: attachHavingKeysSearch(findHaving.bind(context, searchPath, findWith), searchPath)};
@@ -139,15 +160,20 @@ var Finder = function(){
 
 	}
 
-	//filters the array by the predicate
-	function findWith(predicate) {
+	/**
+	 * filters the array by the predicate
+	 * @name findWith
+	 * @param {object} filter
+	 * @returns {*}
+	 */
+	function findWith(filter) {
 		var result = [],
 			pool = this.array;
-		for(var prop in predicate){
+		for(var prop in filter){
 			result = [];
-			if(predicate.hasOwnProperty(prop)){
+			if(filter.hasOwnProperty(prop)){
 				pool.forEach(function search(elem){
-					if(deepCompare(elem, createPredicate(prop, predicate[prop]))){
+					if(deepPartialCompare(elem, createPredicate(prop, filter[prop]))){
 						result.push(elem);
 					}
 				});
@@ -158,7 +184,12 @@ var Finder = function(){
 	}
 
 	//find.[all|one].in(array).with.keys(keys)
-	//searches an object for the given keys, returning true or false
+	/**
+	 * searches an object for the given keys, returning true or false
+	 * @param hasAny
+	 * @param keys
+	 * @returns {*}
+	 */
 	function findWithKeys(hasAny, keys){
 		if(typeof(keys) === 'string') keys = [keys];
 		if(!(keys && keys.constructor === Array)) {
@@ -204,28 +235,36 @@ var Finder = function(){
 			searchPath.forEach(function navigateObject(key){
 				targetArray = targetArray[key];
 			});
-			if(searchFunc.call({array: targetArray, returnMany: true}, predicate).length > 0) {
+
+			var havingContext = {array: targetArray, returnMany: true};
+			if(searchFunc.call(havingContext, predicate).length > 0) {
 				result.push(elem);
 			}
 		});
+
 		return buildResult.call(this, result);
 	}
 
-	//Recursively determines if the predicate exists in the given object
-	function deepCompare(elem, predicate){
-		var key = Object.keys(predicate)[0],
-			value = predicate[key];
+	/**
+	 * Recursively determines if the predicate exists in the given object
+	 * @param {object} entity Object to search in
+	 * @param {object} partial Object with similar structure to entity
+	 * @returns {boolean} If the partial is contained in the entity
+	 */
+	function deepPartialCompare(entity, partial){
+		var key = Object.keys(partial)[0],
+			value = partial[key];
 
-		if(!key) { throw new Error("Invalid filter: " + JSON.stringify(predicate)); }
-		if(Boolean(elem) !== Boolean(predicate)) {return false; } //prevents property checking on null values
-		if(elem[key] === value) return true;
-		if(JSON.stringify(elem[key]) === JSON.stringify(value)) return true;
+		if(!key) { throw new Error("Invalid filter: " + JSON.stringify(partial)); }
+		if(Boolean(entity) !== Boolean(partial)) {return false; } //prevents property checking on null values
+		if(entity[key] === value) return true;
+		if(JSON.stringify(entity[key]) === JSON.stringify(value)) return true;
 
 		if(typeof(value) === 'object'  && value !== null) {
 			var contains = true;
 			for(var valueKey in value){
 				//if any of the comparisons return false, "contains" will be false
-				contains &= deepCompare(elem[key], createPredicate(valueKey, value[valueKey]));
+				contains &= deepPartialCompare(entity[key], createPredicate(valueKey, value[valueKey]));
 			}
 			//convert to boolean
 			return !!contains;	
@@ -237,5 +276,9 @@ var Finder = function(){
 };
 
 if(typeof(module) !== 'undefined'){
+	/**
+	 * Returns an array finder instance
+	 * @type {{Finder: Finder}}
+	 */
 	module.exports = {Finder: new Finder()};
 }
