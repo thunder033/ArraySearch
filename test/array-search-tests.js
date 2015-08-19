@@ -80,6 +80,20 @@ describe('Array Finder', function(){
         expect(result).to.deep.equal(expectedResult);
     });
 
+    it('returns undefined if a single result is not found', function(){
+        var predicate = {age: 16},
+            expectedResult = undefined,
+            result = find.one.in(people).with(predicate);
+        expect(result).to.deep.equal(expectedResult);
+    });
+
+    it('returns an empty array if a single result is not found in array', function(){
+        var predicate = {age: 16},
+            expectedResult = [],
+            result = find.all.in(people).with(predicate);
+        expect(result).to.deep.equal(expectedResult);
+    });
+
     it('deep searches objects', function(){
         var predicate = {roof: {color: 'red'}, stories: 3},
             expectedResult = _buildings['62'],
@@ -139,5 +153,19 @@ describe('Array Finder', function(){
     it('doesn\'t leave key traces on returned objects', function(){
         var result = find.one.in(_people).with({name: 'Joe'});
         expect(result).to.not.have.keys('__arraySearchObjKey');
-    })
+    });
+
+    it('returns undefined if a single result is not found in a map', function(){
+        var predicate = {age: 16},
+            expectedResult = undefined,
+            result = find.one.in(_people).with(predicate);
+        expect(result).to.deep.equal(expectedResult);
+    });
+
+    it('returns an empty map if a single result is not found in map', function(){
+        var predicate = {age: 16},
+            expectedResult = {},
+            result = find.all.in(_people).with(predicate);
+        expect(result).to.deep.equal(expectedResult);
+    });
 });

@@ -20,13 +20,13 @@ var Finder = function Finder(){
 	 * Return one result
 	 * @type {{in: arraySetter}}
 	 */
-	this.one;
+	this.one = null;
 	/**
 	 * Return all results
 	 * @type {object}
 	 * @returns {{in: arraySetter}}
 	 */
-	this.all;
+	this.all = null;
 
 	//create basic search context
 	var context = {
@@ -43,7 +43,7 @@ var Finder = function Finder(){
 		return function(){
 			context.returnMany = many;
 			return {'in': arraySetter};
-		}
+		};
 	}
 	
 	//find.[all|one]
@@ -111,7 +111,7 @@ var Finder = function Finder(){
 	function findWithAnyKeys(hasAny){
 		return function(keys){
 			return findWithKeys.call(this, hasAny, keys);
-		}
+		};
 	}
 
 	//find.[all|one].in(array).having(searchPath).with.keys(keys)
@@ -141,8 +141,14 @@ var Finder = function Finder(){
 			var resultOjb = {};
 
 			if(!this.returnMany){
+				if(!results){
+					return results;
+				}
+
 				var result = results.shift();
-				delete result.__arrSearchObjKey;
+				if(result && result.hasOwnProperty('__arrSearchObjKey')){
+					delete result.__arrSearchObjKey;
+				}
 				return result;
 			}
 
