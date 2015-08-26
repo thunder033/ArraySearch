@@ -53,10 +53,14 @@ var Finder = function Finder(){
 	function convertToArray(map){
 		return Object.keys(map).map(function(key){
 			var obj =  map[key];
-			Object.defineProperty(obj, '__arrSearchObjKey', {
-				value: key,
-				configurable: true
-			});
+
+			if(typeof(obj) === 'object'){
+				Object.defineProperty(obj, '__arrSearchObjKey', {
+					value: key,
+					configurable: true
+				});
+			}
+
 			return obj;
 		});
 	}
@@ -69,6 +73,7 @@ var Finder = function Finder(){
 	 * @returns {{with: findWith, having: setSearchPath}}
 	 */
 	function arraySetter(collection) {
+		context.map = false;
 		if(!(collection && collection.constructor === Array)) {
 
 			if(collection && typeof(collection) === 'object'){
