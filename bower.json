@@ -1,0 +1,29 @@
+{
+  "name": "ArraySearch",
+  "version": "1.1.8",
+  "homepage": "https://github.com/thunder033/ArraySearch",
+  "authors": [
+    "Greg Rozmarynowycz <crashtest1@live.com>"
+  ],
+  "description": "search arrays or maps for objects with desired properties",
+  "main": "finder.js",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "array",
+    "search",
+    "object",
+    "deep",
+    "map"
+  ],
+  "license": "BSD-2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

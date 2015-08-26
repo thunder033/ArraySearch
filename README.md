@@ -9,11 +9,13 @@ for an explanation of how it works and some of the reasoning in my development.
 
 [![NPM](https://nodei.co/npm/arraysearch.png)](https://npmjs.org/package/arraysearch)
 
+`bower install ArraySearch`
+
 In node.js, require ArraySearch:
 
 `var find = require('arraysearch').Finder`
 
-This module can be used outside of Node, simply include the script and initialize the finder:
+To use a bower component or just in the browser, simply include the script and initialize the finder:
 
 `var find = new Finder();`
 
@@ -36,7 +38,7 @@ Return Type:
 If no objects meeting the filter are found, either `undefined` or an empty collection will be returned, depending on the return type.
 
 Parameters:
- - `collection`: an array or map of objects (with a similiar structure)
+ - `collection`: an array or map of objects (with a similar structure)
  - `filter`: properties to search for within each object, should be an object (see examples below)
  - `searchPath`: an object indicating the location of any array within each object (see examples below)
 
