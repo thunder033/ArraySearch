@@ -54,7 +54,7 @@ var Finder = function Finder(){
 		return Object.keys(map).map(function(key){
 			var obj =  map[key];
 
-			if(typeof(obj) === 'object'){
+			if(typeof(obj) === 'object' && obj !== null){
 				Object.defineProperty(obj, '__arrSearchObjKey', {
 					value: key,
 					configurable: true
