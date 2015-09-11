@@ -178,20 +178,40 @@ var Finder = function Finder(){
 	 * @returns {*}
 	 */
 	function findWith(filter) {
-		var result = [],
-			pool = this.array;
+		var pool = Object.keys(this.array),
+			i,
+			key,
+			filterCount = 0,
+			result;
+
 		for(var prop in filter){
 			result = [];
 			if(filter.hasOwnProperty(prop)){
-				pool.forEach(function search(elem){
-					if(deepPartialCompare(elem, createPredicate(prop, filter[prop]))){
-						result.push(elem);
+				filterCount++;
+				var predicate = createPredicate(prop, filter[prop]);
+
+				for(i = 0; i < pool.length; ++i){
+					key = pool[i];
+
+					if(this.array.hasOwnProperty(key)) {
+						var elem = this.array[key];
+						if (deepPartialCompare(elem, predicate)) {
+							result.push(key);
+						}
 					}
-				});
+				}
 			}
+
 			pool = result.slice();
-		}	
-		return buildResult.call(this, result);
+		}
+
+		var aggResult = new this.array.constructor();
+		for(i = 0; i < pool.length; ++i){
+			key = pool[i];
+			aggResult[i] = this.array[key]
+		}
+
+		return buildResult.call(this, aggResult);
 	}
 
 	//find.[all|one].in(array).with.keys(keys)
