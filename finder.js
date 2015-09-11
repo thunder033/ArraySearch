@@ -140,7 +140,13 @@ var Finder = function Finder(){
 		return predicate;
 	}
 
-	function buildResult(results){
+	function buildResult(resultsKeys){
+
+		var results = new this.array.constructor();
+		for(var i = 0; i < resultsKeys.length; ++i){
+			var key = resultsKeys[i];
+			results[i] = this.array[key]
+		}
 
 		if(this.map){
 			var resultOjb = {};
@@ -179,8 +185,6 @@ var Finder = function Finder(){
 	 */
 	function findWith(filter) {
 		var pool = Object.keys(this.array),
-			i,
-			key,
 			filterCount = 0,
 			result;
 
@@ -190,8 +194,8 @@ var Finder = function Finder(){
 				filterCount++;
 				var predicate = createPredicate(prop, filter[prop]);
 
-				for(i = 0; i < pool.length; ++i){
-					key = pool[i];
+				for(var i = 0; i < pool.length; ++i){
+					var key = pool[i];
 
 					if(this.array.hasOwnProperty(key)) {
 						var elem = this.array[key];
@@ -205,13 +209,7 @@ var Finder = function Finder(){
 			pool = result.slice();
 		}
 
-		var aggResult = new this.array.constructor();
-		for(i = 0; i < pool.length; ++i){
-			key = pool[i];
-			aggResult[i] = this.array[key]
-		}
-
-		return buildResult.call(this, aggResult);
+		return buildResult.call(this, pool);
 	}
 
 	//find.[all|one].in(array).with.keys(keys)
@@ -238,13 +236,7 @@ var Finder = function Finder(){
 			}
 		}
 
-		var aggResult = new this.array.constructor();
-		for(i = 0; i < result.length; ++i){
-			key = result[i];
-			aggResult[i] = this.array[key]
-		}
-
-		return buildResult.call(this, aggResult);
+		return buildResult.call(this, result);
 	}
 	
 	
@@ -290,13 +282,7 @@ var Finder = function Finder(){
 			}
 		}
 
-		var aggResult = new this.array.constructor();
-		for(i = 0; i < result.length; ++i){
-			key = result[i];
-			aggResult[i] = this.array[key]
-		}
-
-		return buildResult.call(this, aggResult);
+		return buildResult.call(this, result);
 	}
 
 	/**
