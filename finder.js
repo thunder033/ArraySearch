@@ -226,14 +226,25 @@ var Finder = function Finder(){
 		if(!(keys && keys.constructor === Array)) {
 			throw new TypeError(JSON.stringify(keys) + ' is not array');
 		}
-		var result = [];
-		this.array.forEach(function(elem){
-			var searchFunc = (hasAny === true) ? 'some' : 'every';
+
+		var result = [],
+			pool = Object.keys(this.array),
+			searchFunc = (hasAny === true) ? 'some' : 'every';
+		for(var i = 0; i < pool.length; ++i){
+			var key = pool[i],
+				elem = this.array[key];
 			if(keys[searchFunc](elem.hasOwnProperty, elem)){
-				result.push(elem);
+				result.push(key);
 			}
-		});
-		return buildResult.call(this, result);
+		}
+
+		var aggResult = new this.array.constructor();
+		for(i = 0; i < result.length; ++i){
+			key = result[i];
+			aggResult[i] = this.array[key]
+		}
+
+		return buildResult.call(this, aggResult);
 	}
 	
 	
