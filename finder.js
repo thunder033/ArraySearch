@@ -50,21 +50,6 @@ var Finder = function Finder(){
 	Object.defineProperty(this, 'one', {get: setReturnType(false)});
 	Object.defineProperty(this, 'all', {get: setReturnType(true)});
 
-	function convertToArray(map){
-		return Object.keys(map).map(function(key){
-			var obj =  map[key];
-
-			if(typeof(obj) === 'object' && obj !== null){
-				Object.defineProperty(obj, '__arrSearchObjKey', {
-					value: key,
-					configurable: true
-				});
-			}
-
-			return obj;
-		});
-	}
-
 	//find.[all|one].in(array).with(predicate)
 	/**
 	 * registers the array in the finder
