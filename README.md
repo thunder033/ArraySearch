@@ -116,4 +116,3 @@ find.one.in(buildings).having('exitSigns').with.any.keys(['color','floor'])
  - the ability to search for for objects using relational operators (`>`,`<`,...):
 
 	`find.[all|one].in(array).having(searchPath).[above|below|at[least|most]](number)`
- - extend/replace array `find` prototype method (maybe)
