@@ -7,9 +7,9 @@ for an explanation of how it works and some of the reasoning in my development.
 
 # Installation
 
-[![NPM](https://img.shields.io/npm/v/arraysearch.svg)](https://npmjs.org/package/arraysearch)
+`npm install arraysearch` [![NPM](https://img.shields.io/npm/v/arraysearch.svg)](https://npmjs.org/package/arraysearch)
 
-`bower install ArraySearch`
+`bower install ArraySearch` [![Bower](https://img.shields.io/bower/v/ArraySearch.svg)](https://www.versioneye.com/javascript/thunder033:arraysearch/)
 
 In node.js, require ArraySearch:
 
