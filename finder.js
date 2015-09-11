@@ -271,20 +271,32 @@ var Finder = function Finder(){
 	//filters the array based on  a given array property contains elements that match the predicate
 	//example search path: {leve1 : {level2: {level3: []}}}
 	function findHaving(searchPath, searchFunc, predicate) {
-		var result = [];
-		this.array.forEach(function searchIn(elem){
-			var targetArray = elem;
-			searchPath.forEach(function navigateObject(key){
-				targetArray = targetArray[key];
-			});
+		var result = [],
+			pool = Object.keys(this.array);
+		for(var i = 0; i < pool.length; i++){
+			var key = pool[i];
+			if(this.array.hasOwnProperty(key)){
+				var elem = this.array[key],
+					targetCol = elem;
 
-			var havingContext = {array: targetArray, returnMany: true};
-			if(searchFunc.call(havingContext, predicate).length > 0) {
-				result.push(elem);
+				searchPath.forEach(function navigateObject(key){
+					targetCol = targetCol[key];
+				});
+
+				var havingContext = {array: targetCol, returnMany: true};
+				if(searchFunc.call(havingContext, predicate).length > 0) {
+					result.push(key);
+				}
 			}
-		});
+		}
 
-		return buildResult.call(this, result);
+		var aggResult = new this.array.constructor();
+		for(i = 0; i < result.length; ++i){
+			key = result[i];
+			aggResult[i] = this.array[key]
+		}
+
+		return buildResult.call(this, aggResult);
 	}
 
 	/**
