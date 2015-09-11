@@ -74,15 +74,8 @@ var Finder = function Finder(){
 	 */
 	function arraySetter(collection) {
 		context.map = false;
-		if(!(collection && collection.constructor === Array)) {
-
-			if(collection && typeof(collection) === 'object'){
-				context.map = true;
-				collection = convertToArray(collection);
-			}
-			else {
-				throw new TypeError('Search context is not an array or object map');
-			}
+		if(!(collection && typeof(collection) === 'object')) {
+			throw new TypeError('Search context is not an array or object map');
 		}
 		context.array = collection;
 		return  {with: attachKeysSearch(findWith.bind(context)), having: setSearchPath};
@@ -142,39 +135,22 @@ var Finder = function Finder(){
 
 	function buildResult(resultsKeys){
 
+		if(!this.returnMany){
+			return this.array[resultsKeys[0]];
+		}
+
 		var results = new this.array.constructor();
 		for(var i = 0; i < resultsKeys.length; ++i){
 			var key = resultsKeys[i];
-			results[i] = this.array[key]
-		}
-
-		if(this.map){
-			var resultOjb = {};
-
-			if(!this.returnMany){
-				if(!results){
-					return results;
-				}
-
-				var result = results.shift();
-				if(result && result.hasOwnProperty('__arrSearchObjKey')){
-					delete result.__arrSearchObjKey;
-				}
-				return result;
+			if(results.constructor === Array){
+				results.push(this.array[key]);
 			}
-
-			results.map(function(result){
-				var key = result.__arrSearchObjKey;
-				delete result.__arrSearchObjKey;
-				resultOjb[key] = result;
-			});
-
-			return resultOjb;
-		}
-		else {
-			return (this.returnMany) ? results : results[0];
+			else {
+				results[key] = this.array[key];
+			}
 		}
 
+		return results;
 	}
 
 	/**
