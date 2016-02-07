@@ -1,5 +1,5 @@
 # ArraySearch
-------------
+
 JavaScript utility that allows for robust deep searching of arrays of complex objects. Includes the ability to search by any number of properties within an object, or to find objects based on elements contained in within an array of that object.
 
 See my blog post http://blog.thunderlab.net/arraysearch-and-natural-language-functions
@@ -116,3 +116,7 @@ find.one.in(buildings).having('exitSigns').with.any.keys(['color','floor'])
  - the ability to search for for objects using relational operators (`>`,`<`,...):
 
 	`find.[all|one].in(array).having(searchPath).[above|below|at[least|most]](number)`
+	
+ - add negating function:
+
+	`find.[all|one].in(array).having(searchPath).without(filter)
